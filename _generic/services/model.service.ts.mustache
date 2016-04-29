@@ -1,0 +1,25 @@
+import {Injectable, Inject} from 'angular2/core';
+import {Http, Response} from 'angular2/http';
+import {Observable} from 'rxjs/Rx';
+import 'rxjs/add/operator/map';
+import {ConfService} from '../../../services/conf.service';
+ 
+@Injectable()
+export class {{model}}Service{
+ 
+   constructor(@Inject(ConfService) private cs: ConfService, @Inject(Http) private http: Http){
+       this.cs = cs;
+   }
+ 
+   get{{model}}ById({{model_lowcase}}Id){
+       return this.http.get(this.cs.getBaseUrl()+ '/{{model_lowcase}}/' + {{model_lowcase}}Id).map(res => res.json());
+   }
+
+   get{{model}}s(){
+       return this.http.get(this.cs.getBaseUrl()+ '/{{model_lowcase}}s').map(res => res.json());
+   }
+
+   save{{model}}(b){
+       var s = this.http.post(this.cs.getBaseUrl()+ '/{{model_lowcase}}', b).map(res => res.json());
+   }
+}

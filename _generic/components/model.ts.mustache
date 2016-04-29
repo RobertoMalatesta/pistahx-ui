@@ -1,0 +1,69 @@
+import {Component} from 'angular2/core';
+import {FormBuilder, Validators} from 'angular2/common';
+import {Router,RouteParams} from 'angular2/router';
+import {Injectable, Inject} from 'angular2/core';
+import {Http, Response, Headers} from 'angular2/http';
+import {{=<% %>=}}{<%model%>Service}<%={{ }}=%> from '../services/{{model_lowcase}}.service';
+import {FORM_DIRECTIVES} from 'angular2/common';
+
+import {ConfService} from '../../../services/conf.service';
+
+declare var fetch;
+ 
+@Component({
+	selector: '{{model_lowcase}}',
+	templateUrl: './pages/{{model_lowcase}}/components/{{model_lowcase}}.html',
+	providers: [{{model}}Service],
+    directives:[ FORM_DIRECTIVES]
+})
+
+export class {{model}}Cmp {
+
+	public id{{model}};
+	public code{{model}};
+	public description;
+	public title;
+    public {{model_lowcase}}Form;
+    
+    constructor(private rp : RouteParams,@Inject(ConfService) private cs:ConfService, private fb:FormBuilder,
+    private _{{model_lowcase}}Service: {{model}}Service,private _router: Router, @Inject(Http) private http: Http) {
+
+        this.cs = cs;
+        
+        this.get{{model}}ById(rp.get('id'));
+        
+        this.{{model_lowcase}}Form = fb.group({
+            id{{model}}: [this.id{{model}}, Validators.required],
+            code{{model}}: [this.code{{model}}, Validators.required],
+            title: [this.title, Validators.required],
+            description: [this.description, Validators.required]
+        });
+    }
+
+    add{{model}}() {
+        this.http.post(this.cs.getBaseUrl()+'/{{model_lowcase}}', JSON.stringify({
+            id{{model}} : this.id{{model}},
+            code{{model}} : this.code{{model}},
+            description : this.description,
+            title : this.title
+        }), { headers: new Headers() })
+            .subscribe((res: Response) => res.json());
+    
+    }
+    
+    get{{model}}ById(id) {
+        this._{{model_lowcase}}Service.get{{model}}ById(id)
+         .subscribe(
+            data => {
+            this.{{model_lowcase}}Form.id{{model}} = this.id{{model}} = data.id{{model}};
+            this.{{model_lowcase}}Form.code{{model}}  = this.code{{model}} = data.code{{model}};
+            this.{{model_lowcase}}Form.description  = this.description = data.description;
+            this.{{model_lowcase}}Form.title  = this.title = data.title;
+            }
+         );
+    }
+
+	gotoDashboard() {
+		this._router.navigate(['Home']);
+	}
+}

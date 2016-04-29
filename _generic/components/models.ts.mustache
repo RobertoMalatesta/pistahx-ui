@@ -1,0 +1,42 @@
+import {Component} from 'angular2/core';
+import {FormBuilder, Validators} from 'angular2/common';
+import {Router,RouteParams} from 'angular2/router';
+import {Injectable, Inject} from 'angular2/core';
+import {Http, Response, Headers} from 'angular2/http';
+import {{=<% %>=}}{<%model%>Service}<%={{ }}=%> from '../services/{{model_lowcase}}.service';
+import {FORM_DIRECTIVES} from 'angular2/common';
+
+import {ConfService} from '../../../services/conf.service';
+
+declare var fetch;
+ 
+@Component({
+	selector: '{{model_lowcase}}s',
+	templateUrl: './pages/{{model_lowcase}}/components/{{model_lowcase}}s.html',
+	providers: [{{model}}Service]
+})
+
+export class {{model}}sCmp {
+
+    public {{model_lowcase}}s;
+
+    constructor(private rp : RouteParams,@Inject(ConfService) private cs:ConfService,
+    private _{{model_lowcase}}Service: {{model}}Service,private _router: Router, @Inject(Http) private http: Http) {
+
+        this.cs = cs;
+        
+        this._{{model_lowcase}}Service.get{{model}}s()
+         .subscribe(
+            data => {
+            this.{{model_lowcase}}s = data;
+            }
+         );
+
+        this.{{model_lowcase}}s = [];
+        
+    }
+    
+	gotoDashboard() {
+		this._router.navigate(['Home']);
+	}
+}
